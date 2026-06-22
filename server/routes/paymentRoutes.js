@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Product = require('../models/Product');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -36,20 +36,10 @@ router.post('/create-intent', authMiddleware, async (req, res) => {
 
     // Create a PaymentIntent with the order amount and currency
     // Stripe expects amount in cents (or smallest currency unit)
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totalAmount * 100), // converting dollars to cents
-      currency: 'usd',
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      metadata: {
-        userId: req.user.id
-      }
-    });
-
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
+return res.status(200).json({
+  message: 'Payment disabled for deployment',
+  clientSecret: 'dummy_secret'
+});
   } catch (error) {
     console.error('Stripe Intent Error:', error);
     res.status(500).json({ message: error.message || 'Server Error building payment intent' });
